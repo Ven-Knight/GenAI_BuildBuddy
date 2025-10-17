@@ -98,6 +98,7 @@ def list_files(directory: str = ".") -> str:
     files = [str(f.relative_to(PROJECT_ROOT)) for f in p.glob("**/*") if f.is_file()]
     return "\n".join(files) if files else "No files found."
 
+# wanted to check the reason for wrong toll call 
 # ─────────────────────────────────────────────────────────────────────────────
 # Tool: Run shell command in a safe project directory
 # ─────────────────────────────────────────────────────────────────────────────
