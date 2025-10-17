@@ -101,7 +101,7 @@ def coder_agent(state: dict) -> dict:
                                         description = "Lists all files in a given directory within the project root."
                                                  )
 
-    coder_tools      = [read_file, write_file, repo_browser_list_files, get_current_directory]
+    coder_tools      = [read_file, write_file, list_files, repo_browser_list_files, get_current_directory]
     react_agent      = create_react_agent(llm, coder_tools)
 
     # Invoke agent with structured prompt
