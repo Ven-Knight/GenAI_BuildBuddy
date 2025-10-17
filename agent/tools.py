@@ -3,6 +3,7 @@
 # ─────────────────────────────────────────────────────────────────────────────
 import pathlib
 import subprocess
+import json
 from   typing               import Tuple
 
 # LangChain tool decorator for exposing functions to agent
@@ -41,6 +42,15 @@ def write_file(path: str, content: str) -> str:
     """
     p = safe_path_for_project(path)
     p.parent.mkdir(parents=True, exist_ok=True)
+
+    # Optional: try to decode escaped JSON if it's valid
+    try:
+        content     = json.loads(content)
+        if isinstance(content, dict):
+            content = json.dumps(content, indent=2)
+    except json.JSONDecodeError:
+        pass  # Leave content as-is if not valid JSON
+
     with open(p, "w", encoding="utf-8") as f:
         f.write(content)
     return f"WROTE:{p}"

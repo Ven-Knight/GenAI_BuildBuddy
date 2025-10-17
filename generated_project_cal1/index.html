@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Simple Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+</head>
+<body>
+    <main role="application" aria-label="Simple Calculator">
+        <div id="calculator" class="calculator">
+            <input type="text" id="display" class="display" aria-label="Calculator display" readonly>
+            <div class="buttons">
+                <!-- Digits -->
+                <button class="btn btn-digit" data-value="7" aria-label="seven">7</button>
+                <button class="btn btn-digit" data-value="8" aria-label="eight">8</button>
+                <button class="btn btn-digit" data-value="9" aria-label="nine">9</button>
+                <button class="btn btn-operator" data-value="/" aria-label="divide">÷</button>
+
+                <button class="btn btn-digit" data-value="4" aria-label="four">4</button>
+                <button class="btn btn-digit" data-value="5" aria-label="five">5</button>
+                <button class="btn btn-digit" data-value="6" aria-label="six">6</button>
+                <button class="btn btn-operator" data-value="*" aria-label="multiply">×</button>
+
+                <button class="btn btn-digit" data-value="1" aria-label="one">1</button>
+                <button class="btn btn-digit" data-value="2" aria-label="two">2</button>
+                <button class="btn btn-digit" data-value="3" aria-label="three">3</button>
+                <button class="btn btn-operator" data-value="-" aria-label="subtract">−</button>
+
+                <button class="btn btn-digit" data-value="0" aria-label="zero">0</button>
+                <button class="btn btn-digit" data-value="." aria-label="decimal point">.</button>
+                <button class="btn btn-control" data-value="C" aria-label="clear entry">C</button>
+                <button class="btn btn-operator" data-value="+" aria-label="add">+</button>
+
+                <button class="btn btn-control" data-value="AC" aria-label="all clear">AC</button>
+                <button class="btn btn-control" data-value="⌫" aria-label="backspace">⌫</button>
+                <button class="btn btn-control" data-value="=" aria-label="equals">=</button>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

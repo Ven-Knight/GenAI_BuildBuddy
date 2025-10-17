@@ -7,6 +7,9 @@ from langchain.globals          import set_verbose, set_debug
 # Use Groq-hosted OSS GPT model for fast, cost-effective inference
 from langchain_groq.chat_models import ChatGroq
 
+# Wraps Python functions as agent-callable tools with name and input schema support.
+from langchain_core.tools       import Tool
+
 # LangGraph constants and primitives for graph orchestration
 from langgraph.constants        import END
 from langgraph.graph            import StateGraph
@@ -92,7 +95,13 @@ def coder_agent(state: dict) -> dict:
                        )
 
     # Register available tools for agent execution
-    coder_tools      = [read_file, write_file, list_files, get_current_directory]
+    repo_browser_list_files = Tool.from_function(
+                                        func        = list_files,
+                                        name        = "repo_browser.list_files",
+                                        description = "Lists all files in a given directory within the project root."
+                                                 )
+
+    coder_tools      = [read_file, write_file, repo_browser_list_files, get_current_directory]
     react_agent      = create_react_agent(llm, coder_tools)
 
     # Invoke agent with structured prompt
