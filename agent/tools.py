@@ -9,6 +9,9 @@ from   typing               import Tuple
 # LangChain tool decorator for exposing functions to agent
 from   langchain_core.tools import tool
 
+# Modular imports for prompts
+from   agent.states         import ListFilesInput
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Project root directory for all generated files
 # ─────────────────────────────────────────────────────────────────────────────
@@ -84,7 +87,7 @@ def get_current_directory() -> str:
 # ─────────────────────────────────────────────────────────────────────────────
 # Tool: List all files in a given directory within project root
 # ─────────────────────────────────────────────────────────────────────────────
-@tool
+@tool(args_schema=ListFilesInput)
 def list_files(directory: str = ".") -> str:
     """
     Recursively lists all files in the specified directory.
