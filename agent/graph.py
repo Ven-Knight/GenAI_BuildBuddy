@@ -28,8 +28,10 @@ set_debug  (True)
 set_verbose(True)
 
 # Initialize LLM with structured output support (Groq-hosted GPT OSS 120B)
-llm = ChatGroq(model="openai/gpt-oss-120b")
+llm = ChatGroq(model="openai/gpt-oss-120b", max_tokens=8000)
 
+# Create dedicated LLM for tool calling (uses Groq's tool-optimized model)
+# coder_llm = ChatGroq(model="llama-3.3-70b-versatile", max_tokens=8000, temperature=0)
 
 def planner_agent(state: dict) -> dict:
     """
@@ -52,7 +54,7 @@ def architect_agent(state: dict) -> dict:
             - Injects original Plan into the TaskPlan for traceability
     """
     plan : Plan = state["plan"]
-    resp        = llm.with_structured_output(TaskPlan).invoke(architect_prompt(plan=plan.model_dump_json()))
+    resp        = llm.with_structured_output(TaskPlan, method="json_mode", strict=True).invoke(architect_prompt(plan=plan.model_dump_json()))
 
     if resp is None:
         raise ValueError("Architect did not return a valid response.")
@@ -95,13 +97,7 @@ def coder_agent(state: dict) -> dict:
                        )
 
     # Register available tools for agent execution
-    repo_browser_list_files = Tool.from_function(
-                                        func        = list_files,
-                                        name        = "repo_browser.list_files",
-                                        description = "Lists all files in a given directory within the project root."
-                                                 )
-
-    coder_tools      = [read_file, write_file, list_files, repo_browser_list_files, get_current_directory]
+    coder_tools      = [read_file, write_file, list_files, get_current_directory]    
     react_agent      = create_react_agent(llm, coder_tools)
 
     # Invoke agent with structured prompt
@@ -111,7 +107,7 @@ def coder_agent(state: dict) -> dict:
                                             {"role": "user",   "content": user_prompt}
                                         ]
                        })
-
+    
     # Move to the next step in TaskPlan
     coder_state.current_step_idx += 1
     return {"coder_state": coder_state}

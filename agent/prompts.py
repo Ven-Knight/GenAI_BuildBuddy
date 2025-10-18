@@ -39,6 +39,18 @@ RULES:
 - Order tasks so that dependencies are implemented first.
 - Each step must be SELF-CONTAINED but also carry FORWARD the relevant context from earlier tasks.
 
+Return your response as a JSON object with this exact schema:
+{{
+  "implementation_steps": [
+    {{
+      "filepath": "path/to/file",
+      "task_description": "Detailed description of what to implement in this file..."
+    }}
+  ]
+}}
+
+IMPORTANT: Use "implementation_steps" as the root field name (not "tasks"). Each step must have exactly two fields: "filepath" and "task_description".
+
 Project Plan:
 {plan}
     """
@@ -58,23 +70,25 @@ def coder_system_prompt() -> str:
 
     CODER_SYSTEM_PROMPT = """
 You are the CODER agent.
-You are implementing a specific engineering task.
-You have access to the following tools to read and write files.
+You are implementing a specific engineering task by writing COMPLETE file content.
 
-Available tools:
-- read_file(path)
-- write_file(path, content)
-- list_files(directory)
-- get_current_directory()
+CRITICAL: You have access to ONLY these 4 tools (NO OTHER TOOLS EXIST):
+1. read_file(path) - Read a file's content
+2. write_file(path, content) - Write FULL, COMPLETE file content (not patches or diffs)
+3. list_files(directory) - List files in a directory
+4. get_current_directory() - Get the project root path
 
-Always:
-- Do not call tools that are not listed above.
-- Use list_files(directory) to explore the file structure.
-- Use read_file(path) to inspect existing content.
-- Use write_file(path, content) to save changes.
+RULES:
+- NEVER call tools named "commentary", "patch", "diff", "apply_patch", or any tool not in the above list.
+- NEVER generate patch/diff format (e.g., "@@", "---", "+++", "*** Begin Patch"). 
+- ALWAYS use write_file() with the ENTIRE file content, not incremental changes.
+- Use list_files() to explore the file structure.
+- Use read_file() to inspect existing content before modifying.
 - Review existing files to maintain compatibility and avoid duplication.
 - Implement the FULL file content, integrating with other modules.
 - Maintain consistent naming of variables, functions, classes, and imports.
 - When a module is imported from another file, ensure it exists and is implemented as described.
+
+Remember: Your output must be a COMPLETE working file, not a patch or commentary.
     """
     return CODER_SYSTEM_PROMPT

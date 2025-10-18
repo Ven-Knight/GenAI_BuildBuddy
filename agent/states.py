@@ -12,6 +12,14 @@ class File(BaseModel):
     purpose : str = Field(
                             description = "Purpose of the file, e.g. 'main application logic', 'data processing module'. Helps guide content generation."
                          )
+# ────────────────────────────────────────────────────────────────────────────────────────
+# Define the schema for list_files
+# ────────────────────────────────────────────────────────────────────────────────────────
+class ListFilesInput(BaseModel):
+    directory    : str        = Field(
+                                      default=".", 
+                                      description="Directory path to list files from"
+                                    )
 
 # ────────────────────────────────────────────────────────────────────────────────────────
 # High-level app blueprint from planner_agent
